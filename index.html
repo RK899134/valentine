@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Will You Be My Valentine?</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffd6e8, #ffeef5);
+      font-family: 'Comic Sans MS', 'Poppins', cursive;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 3rem 4rem;
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #ff4d88;
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    button {
+      font-size: 1.5rem;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    #yes {
+      background: #ff4d88;
+      color: white;
+    }
+
+    #yes:hover {
+      transform: scale(1.1);
+    }
+
+    #no {
+      background: #eee;
+      color: #555;
+      position: relative;
+      transition: transform 0.15s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .celebration {
+      font-size: 2.5rem;
+      color: #ff4d88;
+      animation: pop 0.6s ease forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <h1 id="question">Rae, will you be my Valentine? 💖</h1>
+    <div class="buttons" id="buttons">
+      <button id="yes">Yes 💕</button>
+      <button id="no">No 🙃</button>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('no');
+    const yesBtn = document.getElementById('yes');
+    const buttons = document.getElementById('buttons');
+    const question = document.getElementById('question');
+
+    // Make the "No" button dodge the cursor but always stay visible
+    function moveNoButton() {
+      const offsetX = Math.random() * 200 - 100;
+      const offsetY = Math.random() * 120 - 60;
+      noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }
+
+    noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    yesBtn.addEventListener('click', () => {
+      buttons.style.display = 'none';
+      question.textContent = 'YAY!!! 💖💖💖';
+      question.classList.add('celebration');
+      startConfetti();
+    });
+
+    function startConfetti() {
+      for (let i = 0; i < 180; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+        document.body.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+  </script>
+</body>
+</html>
