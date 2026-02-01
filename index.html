@@ -12,7 +12,7 @@
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #ffd6e8, #ffeef5);
-      font-family: 'Comic Sans MS', 'Poppins', cursive;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
       overflow: hidden;
     }
 
@@ -49,6 +49,7 @@
     #yes {
       background: #ff4d88;
       color: white;
+      transition: transform 0.25s ease;
     }
 
     #yes:hover {
@@ -100,32 +101,67 @@
       <button id="yes">Yes 💕</button>
       <button id="no">No 🙃</button>
     </div>
+    <div style="margin-top: 1.5rem;">
+      <button id="reset" style="font-size:1rem; padding:0.5rem 1.5rem; border-radius:999px; border:none; background:#ffd6e8; cursor:pointer;">Reset 🔄</button>
+    </div>
   </div>
 
   <script>
     const noBtn = document.getElementById('no');
     const yesBtn = document.getElementById('yes');
+    const resetBtn = document.getElementById('reset');
     const buttons = document.getElementById('buttons');
     const question = document.getElementById('question');
 
-    // Make the "No" button dodge the cursor but always stay visible
-    function moveNoButton() {
-      const offsetX = Math.random() * 200 - 100;
-      const offsetY = Math.random() * 120 - 60;
+    let yesScale = 1;
+    let noInteractions = 0;
+
+    // --- RUN AWAY + GROWING YES ---
+    function dodgeNoButton() {
+      noInteractions++;
+
+      // Grow YES button
+      yesScale += 0.18;
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+      // Move NO button
+      const offsetX = Math.random() * 220 - 110;
+      const offsetY = Math.random() * 140 - 70;
       noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+      // Change NO text playfully
+      const messages = [
+        'Nice try 😌',
+        'Almost! 💕',
+        'Still no? 👀',
+        'That YES looks big… 💖'
+      ];
+      noBtn.textContent = messages[Math.min(noInteractions - 1, messages.length - 1)];
     }
 
-    noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('mouseenter', dodgeNoButton);
     noBtn.addEventListener('mousedown', (e) => {
       e.preventDefault();
-      moveNoButton();
+      dodgeNoButton();
     });
 
+    // YES CLICK
     yesBtn.addEventListener('click', () => {
       buttons.style.display = 'none';
       question.textContent = 'YAY!!! 💖💖💖';
       question.classList.add('celebration');
       startConfetti();
+    });
+
+    // RESET
+    resetBtn.addEventListener('click', () => {
+      yesScale = 1;
+      noInteractions = 0;
+      yesBtn.style.transform = 'scale(1)';
+      noBtn.style.transform = 'translate(0, 0)';
+      noBtn.textContent = 'No 🙃';
+      buttons.style.display = 'flex';
+      question.textContent = 'Rae, will you be my Valentine? 💖';
     });
 
     function startConfetti() {
@@ -136,7 +172,6 @@
         confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
         confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
         document.body.appendChild(confetti);
-
         setTimeout(() => confetti.remove(), 5000);
       }
     }
